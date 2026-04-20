@@ -1,13 +1,13 @@
 import { createAuthClient } from 'better-auth/client'
 
-const apiBase = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/api/v1'
+const apiBase = import.meta.env.VITE_API_BASE_URL ?? 'http://i2c20wv92gd8pqui6lxq7qq2.204.168.204.48.sslip.io/api/v1'
 
 /** origin ของ API — แยกจาก basePath ตาม [Better Auth basic usage](https://www.better-auth.com/docs/basic-usage) */
 const adminAuthOrigin = (() => {
   try {
     return new URL(apiBase).origin
   } catch {
-    return 'http://localhost:3000'
+    return 'http://i2c20wv92gd8pqui6lxq7qq2.204.168.204.48.sslip.io'
   }
 })()
 
