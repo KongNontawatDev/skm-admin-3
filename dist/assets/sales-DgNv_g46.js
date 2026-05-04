@@ -1,0 +1,1 @@
+import{u as e}from"./button-4xO74dt-.js";import{t}from"./dashboard-B0XcFwaJ.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`sales`});export{r as component};

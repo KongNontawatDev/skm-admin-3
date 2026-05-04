@@ -19,7 +19,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { isRichTextEmpty, RichTextEditor } from '@/components/rich-text-editor/rich-text-editor'
+import { RichTextEditor } from '@/components/rich-text-editor/rich-text-editor'
+import { isRichTextEmpty } from '@/lib/rich-text'
 
 type PromotionRow = {
   id: string
@@ -28,7 +29,7 @@ type PromotionRow = {
   image: string | null
   startDate: string | null
   endDate: string | null
-  isActive: boolean
+  isActive: boolean | number
 }
 
 function toLocalInput(iso: string | null): string {
@@ -37,6 +38,10 @@ function toLocalInput(iso: string | null): string {
   if (Number.isNaN(d.getTime())) return ''
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function toBool(value: boolean | number | null | undefined): boolean {
+  return value === true || value === 1
 }
 
 export function PromotionsPage() {
@@ -68,7 +73,10 @@ export function PromotionsPage() {
   const list = useQuery({
     queryKey: ['admin', 'promotions'],
     queryFn: async (): Promise<PromotionRow[]> =>
-      unwrapData(await api.get('/admin/promotions')) as PromotionRow[],
+      (unwrapData(await api.get('/admin/promotions')) as PromotionRow[]).map((row) => ({
+        ...row,
+        isActive: toBool(row.isActive),
+      })),
   })
 
   const resetForm = () => {
@@ -97,7 +105,7 @@ export function PromotionsPage() {
     setImageRemoved(false)
     setStart(toLocalInput(row.startDate))
     setEnd(toLocalInput(row.endDate))
-    setIsActive(row.isActive)
+    setIsActive(toBool(row.isActive))
     setCreateOpen(true)
   }
 
@@ -108,7 +116,7 @@ export function PromotionsPage() {
         description,
         startDate: start ? new Date(start).toISOString() : undefined,
         endDate: end ? new Date(end).toISOString() : undefined,
-        isActive,
+        isActive: Boolean(isActive),
       })
       const row = unwrapData<PromotionRow>(res)
       if (pendingImageFile) {
@@ -140,7 +148,7 @@ export function PromotionsPage() {
         description,
         startDate: start ? new Date(start).toISOString() : null,
         endDate: end ? new Date(end).toISOString() : null,
-        isActive,
+        isActive: Boolean(isActive),
       }
       if (imageRemoved) body.image = null
       await api.patch(`/admin/promotions/${edit.id}`, body)
@@ -308,7 +316,7 @@ export function PromotionsPage() {
               imageUrl={preview.row.image}
               startDate={preview.row.startDate}
               endDate={preview.row.endDate}
-              isActive={preview.row.isActive}
+              isActive={toBool(preview.row.isActive)}
             />
           ) : preview?.mode === 'draft' ? (
             <PromotionPreviewPanel

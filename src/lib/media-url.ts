@@ -6,7 +6,7 @@ function apiOriginForAssets(): string {
   if (publicOrigin?.trim() && /^https?:\/\//i.test(publicOrigin.trim())) {
     return publicOrigin.trim().replace(/\/$/, '')
   }
-  const base = import.meta.env.VITE_API_BASE_URL ?? 'http://i2c20wv92gd8pqui6lxq7qq2.204.168.204.48.sslip.io/api/v1'
+  const base = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/api/v1'
   if (/^https?:\/\//i.test(base)) {
     try {
       return new URL(base).origin

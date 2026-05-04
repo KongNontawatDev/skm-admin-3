@@ -173,6 +173,12 @@
 .rich-html-preview .tiptap-editor-content p {
   margin: 0.35em 0;
 }
+.rich-html-preview .tiptap-editor-content p:empty::before {
+  content: '\00a0';
+}
+.rich-html-preview .tiptap-editor-content p:has(> br:only-child) {
+  min-height: 1.4em;
+}
 .rich-html-preview .tiptap-editor-content h1 {
   font-size: 1.5rem;
   font-weight: 700;

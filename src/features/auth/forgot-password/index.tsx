@@ -29,6 +29,17 @@ const schema = z.object({
   email: z.string().email('รูปแบบอีเมลไม่ถูกต้อง'),
 })
 
+function adminAppOrigin(): string {
+  const configured = import.meta.env.VITE_ADMIN_APP_URL?.trim()
+  if (configured) return configured.replace(/\/$/, '')
+
+  if (typeof window === 'undefined') return 'http://localhost:5174'
+  const { hostname, origin } = window.location
+  if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:5174'
+  if (hostname === 'skm-easy-admin.ta-pps.com') return 'https://skm-easy-admin.ta-pps.com'
+  return origin.replace(/\/$/, '')
+}
+
 export function ForgotPasswordPage() {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -41,7 +52,7 @@ export function ForgotPasswordPage() {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoading(true)
     try {
-      const redirectTo = `${window.location.origin}/reset-password`
+      const redirectTo = `${adminAppOrigin()}/reset-password`
       const { error } = await adminAuthClient.requestPasswordReset({
         email: values.email,
         redirectTo,
@@ -65,14 +76,15 @@ export function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>ลืมรหัสผ่าน</CardTitle>
           <CardDescription>
-            กรอกอีเมลบัญชีแอดมิน ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ทางอีเมล
+            กรอกอีเมลบัญชีแอดมิน ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ทางอีเมล ถ้าไม่ได้รับอีเมลให้ตรวจสอบว่าใช้อีเมลเดียวกับบัญชีแอดมิน
           </CardDescription>
         </CardHeader>
         <CardContent className='grid gap-4'>
           {done ? (
-            <p className='text-sm text-muted-foreground'>
-              ตรวจสอบกล่องจดหมาย (และโฟลเดอร์สแปม) แล้วกดลิงก์ในจดหมายเพื่อตั้งรหัสผ่านใหม่
-            </p>
+            <div className='grid gap-2 text-sm text-muted-foreground'>
+              <p>ถ้าอีเมลนี้เป็นบัญชีแอดมิน ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านให้ภายในไม่กี่นาที</p>
+              <p>ถ้าไม่พบอีเมลในกล่องจดหมายหรือสแปม ให้ตรวจสอบว่าใช้อีเมลเดียวกับบัญชีแอดมินในระบบหลังบ้าน</p>
+            </div>
           ) : (
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-3'>

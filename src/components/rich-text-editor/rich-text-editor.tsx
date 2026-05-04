@@ -27,12 +27,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { AdminImage } from './admin-image'
 
-export function isRichTextEmpty(html: string): boolean {
-  const doc = new DOMParser().parseFromString(html || '', 'text/html')
-  const text = doc.body.textContent?.replace(/\u00a0/g, ' ').trim() ?? ''
-  return text.length === 0
-}
-
 type RichTextEditorProps = {
   id?: string
   value: string
@@ -40,6 +34,9 @@ type RichTextEditorProps = {
   placeholder?: string
   className?: string
 }
+
+import { toast } from 'sonner'
+import { uploadCmsAsset } from '@/lib/cms-upload'
 
 function ToolbarButton({
   onClick,
@@ -78,16 +75,22 @@ function EditorToolbar({ editor }: { editor: Editor }) {
   }, [])
 
   const onFile = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    async (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       e.target.value = ''
       if (!file || !file.type.startsWith('image/')) return
-      const reader = new FileReader()
-      reader.onload = () => {
-        const src = reader.result as string
-        editor.chain().focus().setImage({ src }).run()
-      }
-      reader.readAsDataURL(file)
+
+      toast.promise(uploadCmsAsset(file), {
+        loading: 'กำลังอัปโหลดรูปภาพ...',
+        success: (url) => {
+          if (url) {
+            editor.chain().focus().setImage({ src: url }).run()
+            return 'อัปโหลดรูปภาพสำเร็จ'
+          }
+          return 'อัปโหลดไม่สำเร็จ'
+        },
+        error: 'อัปโหลดรูปภาพล้มเหลว',
+      })
     },
     [editor],
   )
@@ -258,7 +261,10 @@ function ImageBubbleMenu({ editor }: { editor: Editor }) {
 
 export function RichTextEditor({ id, value, onChange, placeholder, className }: RichTextEditorProps) {
   const onChangeRef = useRef(onChange)
-  onChangeRef.current = onChange
+
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
 
   const editor = useEditor({
     immediatelyRender: false,

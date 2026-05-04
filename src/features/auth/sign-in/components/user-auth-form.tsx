@@ -65,15 +65,18 @@ export function UserAuthForm({ className, redirectTo, ...props }: UserAuthFormPr
         return
       }
       if (res?.user) {
-        auth.setUser({
-          id: res.user.id,
-          email: res.user.email,
-          name: res.user.name,
-        })
+        auth.setUser(
+          {
+            id: res.user.id,
+            email: res.user.email,
+            name: res.user.name,
+          },
+          (res as { token?: string }).token // Save the token if it exists in the response
+        )
       }
       const target = safeRedirectPath(redirectTo)
-      void navigate({ to: target, replace: true } as never)
-      toast.success('เข้าสู่ระบบแล้ว')
+      await navigate({ to: target, replace: true } as never)
+      toast.success('เข้าสู่ระบบสำเร็จ')
     } catch {
       toast.error('เข้าสู่ระบบไม่สำเร็จ')
     } finally {

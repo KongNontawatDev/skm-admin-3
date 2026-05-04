@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { api, isAxiosError, unwrapData } from '@/lib/api'
 import { PageShell } from '@/components/layout/page-shell'
@@ -36,19 +36,14 @@ export function LineOaTestPage() {
       unwrapData(await api.get('/admin/tools/line-oa/templates')) as TemplateRow[],
   })
 
-  useEffect(() => {
-    if (templates.data?.length && !templateId) {
-      setTemplateId(templates.data[0].id)
-    }
-  }, [templates.data, templateId])
-
-  const selected = templates.data?.find((t) => t.id === templateId)
+  const effectiveTemplateId = templateId || templates.data?.[0]?.id || ''
+  const selected = templates.data?.find((t) => t.id === effectiveTemplateId)
 
   const pushMut = useMutation({
     mutationFn: async () => {
       const res = await api.post('/admin/tools/line-oa/test-push', {
         legacyCustomerId: legacyCustomerId.trim(),
-        template: templateId,
+        template: effectiveTemplateId,
       })
       return unwrapData(res) as TestPushResult
     },
@@ -71,10 +66,13 @@ export function LineOaTestPage() {
             onChange={(e) => setLegacyCustomerId(e.target.value)}
             autoComplete='off'
           />
+          <p className='text-muted-foreground text-xs'>
+            ใช้รูปแบบ M03:IDNO เท่านั้น ระบบจะดึงสัญญา งวดค้าง ใบเสร็จ และลิงก์จากข้อมูลจริง ถ้าไม่มีข้อมูลจริงจะไม่ส่งข้อความปลอม
+          </p>
         </div>
         <div className='grid gap-2'>
           <Label>เทมเพลต</Label>
-          <Select value={templateId} onValueChange={setTemplateId} disabled={!templates.data?.length}>
+          <Select value={effectiveTemplateId} onValueChange={setTemplateId} disabled={!templates.data?.length}>
             <SelectTrigger>
               <SelectValue placeholder={templates.isLoading ? 'กำลังโหลด…' : 'เลือกเทมเพลต'} />
             </SelectTrigger>
@@ -87,12 +85,14 @@ export function LineOaTestPage() {
             </SelectContent>
           </Select>
           {selected?.channel ? (
-            <p className='text-muted-foreground text-xs'>{selected.channel}</p>
+            <p className='text-muted-foreground text-xs'>
+              {selected.channel} · template นี้ใช้ข้อมูลจริงจากฐานข้อมูล production แบบอ่านอย่างเดียว
+            </p>
           ) : null}
         </div>
         <Button
           type='button'
-          disabled={pushMut.isPending || !legacyCustomerId.trim() || !templateId}
+          disabled={pushMut.isPending || !legacyCustomerId.trim() || !effectiveTemplateId}
           onClick={() => pushMut.mutate()}
         >
           {pushMut.isPending ? 'กำลังส่ง…' : 'ส่งทดสอบ'}

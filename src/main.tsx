@@ -22,6 +22,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
+        // Query flow: admin pages load data through React Query; auth/permission errors should not retry.
         // eslint-disable-next-line no-console
         if (import.meta.env.DEV) console.log({ failureCount, error })
 
@@ -50,6 +51,7 @@ const queryClient = new QueryClient({
   },
   queryCache: new QueryCache({
     onError: (error) => {
+      // Central admin error boundary for async queries; 401 resets auth and preserves redirect target.
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           toast.error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่')
@@ -74,6 +76,7 @@ const queryClient = new QueryClient({
 
 // Create a new router instance
 const router = createRouter({
+  // Router input is generated routeTree; output is typed navigation + queryClient in route context.
   routeTree,
   context: { queryClient },
   defaultPreload: 'intent',
@@ -92,6 +95,7 @@ const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
+    // Provider order gives every admin route access to query cache, theme, font, and direction context.
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>

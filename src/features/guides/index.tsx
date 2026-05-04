@@ -16,7 +16,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { isRichTextEmpty, RichTextEditor } from '@/components/rich-text-editor/rich-text-editor'
+import { RichTextEditor } from '@/components/rich-text-editor/rich-text-editor'
+import { isRichTextEmpty } from '@/lib/rich-text'
 
 type GuideRow = {
   id: string

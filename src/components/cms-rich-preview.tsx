@@ -4,14 +4,14 @@ import { resolveMediaUrl } from '@/lib/media-url'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-export function rewriteHtmlAssetUrls(html: string): string {
+function rewriteHtmlAssetUrls(html: string): string {
   if (!html) return ''
   return html
     .replace(/src="(\/api\/v1\/[^"]+)"/gi, (_, p: string) => `src="${resolveMediaUrl(p)}"`)
     .replace(/src='(\/api\/v1\/[^']+)'/gi, (_, p: string) => `src='${resolveMediaUrl(p)}'`)
 }
 
-export function RichHtmlPreview({ html, className }: { html: string; className?: string }) {
+function RichHtmlPreview({ html, className }: { html: string; className?: string }) {
   const inner = useMemo(() => rewriteHtmlAssetUrls(html), [html])
   return (
     <div
@@ -57,9 +57,9 @@ export function PromotionPreviewPanel({
   const end = formatThDate(endDate)
 
   return (
-    <div className='bg-background space-y-5'>
+    <div className='mx-auto max-w-[430px] space-y-5 rounded-2xl bg-[#F9FAFB] p-4 text-gray-900 shadow-sm'>
       {hero ? (
-        <div className='border-border overflow-hidden rounded-xl border shadow-sm'>
+        <div className='overflow-hidden rounded-2xl bg-gray-100 shadow-sm'>
           <img src={hero} alt='' className='max-h-72 w-full object-cover' />
         </div>
       ) : (
@@ -68,7 +68,8 @@ export function PromotionPreviewPanel({
           <span>ยังไม่มีรูปโปรโมชัน</span>
         </div>
       )}
-      <div className='space-y-2'>
+      <div className='rounded-2xl bg-white p-4 shadow-sm'>
+        <div className='space-y-2'>
         <div className='flex flex-wrap items-center gap-2'>
           <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? 'เปิดใช้งาน' : 'ปิด'}</Badge>
           {(start || end) && (
@@ -80,9 +81,10 @@ export function PromotionPreviewPanel({
             </span>
           )}
         </div>
-        <h2 className='text-2xl leading-tight font-semibold tracking-tight'>{title || '—'}</h2>
+        <h2 className='text-xl leading-tight font-bold'>{title || '—'}</h2>
+        </div>
+        <RichHtmlPreview html={descriptionHtml} className='mt-4 border-0 bg-transparent shadow-none' />
       </div>
-      <RichHtmlPreview html={descriptionHtml} />
     </div>
   )
 }
@@ -104,17 +106,19 @@ export function ArticlePreviewPanel({
   const pub = formatThDate(publishedAt)
 
   return (
-    <div className='bg-background space-y-5'>
+    <div className='mx-auto max-w-[430px] space-y-5 rounded-2xl bg-[#F9FAFB] p-4 text-gray-900 shadow-sm'>
       {hero ? (
-        <div className='border-border overflow-hidden rounded-xl border shadow-sm'>
+        <div className='overflow-hidden rounded-2xl bg-gray-100 shadow-sm'>
           <img src={hero} alt='' className='max-h-80 w-full object-cover' />
         </div>
       ) : null}
-      <div className='space-y-1'>
+      <div className='space-y-4 rounded-2xl bg-white p-4 shadow-sm'>
+        <div className='space-y-1'>
         <h2 className='text-2xl leading-tight font-semibold tracking-tight'>{title || '—'}</h2>
         {pub ? <p className='text-muted-foreground text-sm'>เผยแพร่ {pub}</p> : <p className='text-muted-foreground text-sm'>ยังไม่กำหนดเวลาเผยแพร่</p>}
+        </div>
+        <RichHtmlPreview html={contentHtml} className='border-0 bg-transparent shadow-none' />
       </div>
-      <RichHtmlPreview html={contentHtml} />
     </div>
   )
 }
@@ -129,12 +133,14 @@ export function GuidePreviewPanel({
   sortOrder: number
 }) {
   return (
-    <div className='bg-background space-y-4'>
-      <div className='flex flex-wrap items-center gap-2'>
+    <div className='mx-auto max-w-[430px] space-y-4 rounded-2xl bg-[#F9FAFB] p-4 text-gray-900 shadow-sm'>
+      <div className='rounded-2xl bg-white p-4 shadow-sm'>
+        <div className='flex flex-wrap items-center gap-2'>
         <Badge variant='outline'>ลำดับ {sortOrder}</Badge>
-        <h2 className='text-2xl leading-tight font-semibold tracking-tight'>{title || '—'}</h2>
+        <h2 className='text-xl leading-tight font-bold'>{title || '—'}</h2>
+        </div>
+        <RichHtmlPreview html={contentHtml} className='mt-4 border-0 bg-transparent shadow-none' />
       </div>
-      <RichHtmlPreview html={contentHtml} />
     </div>
   )
 }
