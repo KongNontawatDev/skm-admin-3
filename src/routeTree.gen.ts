@@ -23,6 +23,7 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedSupportIndexRouteImport } from './routes/_authenticated/support/index'
 import { Route as AuthenticatedPromotionsIndexRouteImport } from './routes/_authenticated/promotions/index'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
+import { Route as AuthenticatedPaymentClaimsIndexRouteImport } from './routes/_authenticated/payment-claims/index'
 import { Route as AuthenticatedLogViewerIndexRouteImport } from './routes/_authenticated/log-viewer/index'
 import { Route as AuthenticatedLineOaTestIndexRouteImport } from './routes/_authenticated/line-oa-test/index'
 import { Route as AuthenticatedLineCustomersIndexRouteImport } from './routes/_authenticated/line-customers/index'
@@ -106,6 +107,12 @@ const AuthenticatedProfileIndexRoute =
     path: '/profile/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPaymentClaimsIndexRoute =
+  AuthenticatedPaymentClaimsIndexRouteImport.update({
+    id: '/payment-claims/',
+    path: '/payment-claims/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLogViewerIndexRoute =
   AuthenticatedLogViewerIndexRouteImport.update({
     id: '/log-viewer/',
@@ -182,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/line-customers/': typeof AuthenticatedLineCustomersIndexRoute
   '/line-oa-test/': typeof AuthenticatedLineOaTestIndexRoute
   '/log-viewer/': typeof AuthenticatedLogViewerIndexRoute
+  '/payment-claims/': typeof AuthenticatedPaymentClaimsIndexRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
   '/promotions/': typeof AuthenticatedPromotionsIndexRoute
   '/support/': typeof AuthenticatedSupportIndexRoute
@@ -207,6 +215,7 @@ export interface FileRoutesByTo {
   '/line-customers': typeof AuthenticatedLineCustomersIndexRoute
   '/line-oa-test': typeof AuthenticatedLineOaTestIndexRoute
   '/log-viewer': typeof AuthenticatedLogViewerIndexRoute
+  '/payment-claims': typeof AuthenticatedPaymentClaimsIndexRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
   '/promotions': typeof AuthenticatedPromotionsIndexRoute
   '/support': typeof AuthenticatedSupportIndexRoute
@@ -234,6 +243,7 @@ export interface FileRoutesById {
   '/_authenticated/line-customers/': typeof AuthenticatedLineCustomersIndexRoute
   '/_authenticated/line-oa-test/': typeof AuthenticatedLineOaTestIndexRoute
   '/_authenticated/log-viewer/': typeof AuthenticatedLogViewerIndexRoute
+  '/_authenticated/payment-claims/': typeof AuthenticatedPaymentClaimsIndexRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
   '/_authenticated/promotions/': typeof AuthenticatedPromotionsIndexRoute
   '/_authenticated/support/': typeof AuthenticatedSupportIndexRoute
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/line-customers/'
     | '/line-oa-test/'
     | '/log-viewer/'
+    | '/payment-claims/'
     | '/profile/'
     | '/promotions/'
     | '/support/'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/line-customers'
     | '/line-oa-test'
     | '/log-viewer'
+    | '/payment-claims'
     | '/profile'
     | '/promotions'
     | '/support'
@@ -312,6 +324,7 @@ export interface FileRouteTypes {
     | '/_authenticated/line-customers/'
     | '/_authenticated/line-oa-test/'
     | '/_authenticated/log-viewer/'
+    | '/_authenticated/payment-claims/'
     | '/_authenticated/profile/'
     | '/_authenticated/promotions/'
     | '/_authenticated/support/'
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/payment-claims/': {
+      id: '/_authenticated/payment-claims/'
+      path: '/payment-claims'
+      fullPath: '/payment-claims/'
+      preLoaderRoute: typeof AuthenticatedPaymentClaimsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/log-viewer/': {
       id: '/_authenticated/log-viewer/'
       path: '/log-viewer'
@@ -515,6 +535,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLineCustomersIndexRoute: typeof AuthenticatedLineCustomersIndexRoute
   AuthenticatedLineOaTestIndexRoute: typeof AuthenticatedLineOaTestIndexRoute
   AuthenticatedLogViewerIndexRoute: typeof AuthenticatedLogViewerIndexRoute
+  AuthenticatedPaymentClaimsIndexRoute: typeof AuthenticatedPaymentClaimsIndexRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
   AuthenticatedPromotionsIndexRoute: typeof AuthenticatedPromotionsIndexRoute
   AuthenticatedSupportIndexRoute: typeof AuthenticatedSupportIndexRoute
@@ -533,6 +554,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLineCustomersIndexRoute: AuthenticatedLineCustomersIndexRoute,
   AuthenticatedLineOaTestIndexRoute: AuthenticatedLineOaTestIndexRoute,
   AuthenticatedLogViewerIndexRoute: AuthenticatedLogViewerIndexRoute,
+  AuthenticatedPaymentClaimsIndexRoute: AuthenticatedPaymentClaimsIndexRoute,
   AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
   AuthenticatedPromotionsIndexRoute: AuthenticatedPromotionsIndexRoute,
   AuthenticatedSupportIndexRoute: AuthenticatedSupportIndexRoute,

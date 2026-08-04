@@ -9,6 +9,7 @@ import {
   MessageCircle,
   MessageSquareWarning,
   PackageSearch,
+  ReceiptText,
   Repeat2,
   UserCircle,
   Users,
@@ -25,11 +26,32 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
           items: [
             { title: 'เมนูทางลัด', url: '/', icon: LayoutDashboard },
-            { title: 'ภาพรวมธุรกิจ', url: '/dashboard/overview', icon: LayoutDashboard },
-            { title: 'สินเชื่อ & ลูกหนี้', url: '/dashboard/finance', icon: Banknote },
+            {
+              title: 'ภาพรวมธุรกิจ',
+              url: '/dashboard/overview',
+              icon: LayoutDashboard,
+            },
+            {
+              title: 'สินเชื่อ & ลูกหนี้',
+              url: '/dashboard/finance',
+              icon: Banknote,
+            },
+            {
+              title: 'รายการแจ้งชำระ',
+              url: '/payment-claims',
+              icon: ReceiptText,
+            },
             { title: 'ยอดขาย & เซลล์', url: '/dashboard/sales', icon: Bike },
-            { title: 'รีไฟแนนซ์ / เทิร์น / รถยึด', url: '/dashboard/refinance', icon: Repeat2 },
-            { title: 'รถมือสอง & สต๊อก', url: '/dashboard/used-stock', icon: PackageSearch },
+            {
+              title: 'รีไฟแนนซ์ / เทิร์น / รถยึด',
+              url: '/dashboard/refinance',
+              icon: Repeat2,
+            },
+            {
+              title: 'รถมือสอง & สต๊อก',
+              url: '/dashboard/used-stock',
+              icon: PackageSearch,
+            },
           ],
         },
         {
